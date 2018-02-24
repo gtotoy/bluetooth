@@ -9,6 +9,8 @@ import (
 	"github.com/paypal/gatt/examples/service"
 )
 
+var DeviceName = "raspberrypi"
+
 func main() {
 	d, err := gatt.NewDevice(option.DefaultServerOptions...)
 	if err != nil {
@@ -28,8 +30,8 @@ func main() {
 		case gatt.StatePoweredOn:
 			// Setup GAP and GATT services for Linux implementation.
 			// OS X doesn't export the access of these services.
-			d.AddService(service.NewGapService("Gopher")) // no effect on OS X
-			d.AddService(service.NewGattService())        // no effect on OS X
+			d.AddService(service.NewGapService(DeviceName)) // no effect on OS X
+			d.AddService(service.NewGattService())          // no effect on OS X
 
 			// A simple count service for demo.
 			s1 := service.NewCountService()
@@ -40,7 +42,7 @@ func main() {
 			d.AddService(s2)
 
 			// Advertise device name and service's UUIDs.
-			d.AdvertiseNameAndServices("Gopher", []gatt.UUID{s1.UUID(), s2.UUID()})
+			d.AdvertiseNameAndServices(DeviceName, []gatt.UUID{s1.UUID(), s2.UUID()})
 
 			// Advertise as an OpenBeacon iBeacon
 			d.AdvertiseIBeacon(gatt.MustParseUUID("AA6062F098CA42118EC4193EB73CCEB6"), 1, 2, -59)
